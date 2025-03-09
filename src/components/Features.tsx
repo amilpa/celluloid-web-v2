@@ -4,7 +4,7 @@ import { useInView } from '@/lib/utils/animation';
 import { 
   Pen, 
   Users, 
-  Lightning, 
+  Zap, 
   Wand2, 
   BookOpen, 
   LayoutTemplate 
@@ -22,7 +22,7 @@ const features = [
     description: 'Scripts are generated in professional screenplay format, ready for production or submission.'
   },
   {
-    icon: <Lightning className="h-6 w-6" />,
+    icon: <Zap className="h-6 w-6" />,
     title: 'Rapid Generation',
     description: 'Transform your concept into a complete script in minutes instead of weeks or months.'
   },
