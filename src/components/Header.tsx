@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useScrollProgress } from '@/lib/utils/animation';
+import { Link } from 'react-router-dom';
 
 export const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -34,12 +35,12 @@ export const Header = () => {
             <a href="#create" className="text-sm font-medium hover:text-primary transition-colors">
               Create Script
             </a>
+            <Link to="/dashboard" className="text-sm font-medium hover:text-primary transition-colors">
+              Dashboard
+            </Link>
           </nav>
           
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" className="hidden sm:flex">
-              Sign In
-            </Button>
             <Button size="sm" className="animate-fade-in">
               Get Started
             </Button>
