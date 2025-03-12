@@ -320,7 +320,7 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
                           rows={3}
                           className="col-span-2"
                         />
-                        <InputField
+                        <TextareaField
                           label="Central Message"
                           id="centralMessage"
                           name="centralMessage"
@@ -328,6 +328,7 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
                           value={centralMessage}
                           onChange={handleInputChange}
                           helperText="E.g., 'Love conquers all', 'Good triumphs over evil'"
+                          rows={3}
                         />
                       </div>
                     </div>
@@ -363,7 +364,7 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
                           rows={3}
                           className="col-span-2"
                         />
-                        <InputField
+                        <TextareaField
                           label="Central Message"
                           id="centralMessage"
                           name="centralMessage"
@@ -371,6 +372,7 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
                           value={centralMessage}
                           onChange={handleInputChange}
                           helperText="E.g., 'Love conquers all', 'Good triumphs over evil'"
+                          rows={3}
                         />
                         <TextareaField
                           label="Characters"

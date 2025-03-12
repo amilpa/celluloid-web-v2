@@ -33,11 +33,11 @@ export const Header = () => {
             <div className="flex items-center gap-2">
               <div className="h-9 w-9 rounded-lg bg-primary flex items-center justify-center">
                 <span className="text-primary-foreground font-semibold">
-                  CS
+                  CL
                 </span>
               </div>
               <span className="font-display font-medium text-lg">
-                CinematicScribe
+                Celluloid
               </span>
             </div>
           </Link>

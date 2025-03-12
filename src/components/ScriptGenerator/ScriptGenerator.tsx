@@ -2,6 +2,16 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import GeneratorCard from "./GeneratorCard";
 
+import "./animation.css";
+
+interface ProjectData {
+  logline: string;
+  abstract: string;
+  centralMessage: string;
+  genre: string;
+  characters: string;
+}
+
 export default function ScriptGenerator() {
   const [currentStep, setCurrentStep] = useState(1);
   const [logline, setLogline] = useState("");
@@ -24,7 +34,7 @@ export default function ScriptGenerator() {
         genre,
       });
       setLogline(response.data.logline); // Adjust based on actual API response
-      localStorage.setItem(projectId, JSON.stringify({ story_elements: response.data.story_elements }));
+      return response
     } catch (error) {
       console.error("Error fetching logline:", error);
     }
@@ -36,7 +46,8 @@ export default function ScriptGenerator() {
         logline,
         story_elements: JSON.parse(localStorage.getItem(projectId) || "{}").story_elements, 
       });
-      setCentralMessage(response.data.centralMessage); // Adjust based on actual API response
+      setCentralMessage(response.data.central_message); // Adjust based on actual API response
+      return response
     } catch (error) {
       console.error("Error fetching central message:", error);
     }
@@ -44,14 +55,14 @@ export default function ScriptGenerator() {
 
   useEffect(() => {
     if (projectId && pendingStep === 1) {
-      console.log("projectId after setting:", projectId); // Confirm projectId is set
-      fetchLogline().then(() => {
+      fetchLogline().then((response) => {
         const projectData = {
-          logline,
+          logline: response.data.logline,
           abstract,
           centralMessage,
           genre,
           characters,
+          story_elements: response.data.story_elements,
         };
         localStorage.setItem(projectId, JSON.stringify(projectData));
         setCurrentStep((prevStep) => prevStep + 1);
@@ -60,6 +71,27 @@ export default function ScriptGenerator() {
         setIsLoading(false);  
       }).catch(() => {
         console.error("Error fetching logline");
+        setIsFetchingComplete(true); // Ensure it's set even on error
+        setIsLoading(false); // Stop loading spinner
+      });
+    }
+    if (projectId && pendingStep === 2) {
+      fetchCentralMessage().then((response) => {
+        const projectData = {
+          logline,
+          abstract,
+          centralMessage: response.data.central_message,
+          genre,
+          characters,
+          story_elements: JSON.parse(localStorage.getItem(projectId) || "{}").story_elements,
+        };
+        localStorage.setItem(projectId, JSON.stringify(projectData));
+        setCurrentStep((prevStep) => prevStep + 1);
+        setPendingStep(null);
+        setIsFetchingComplete(true); // Set fetching complete
+        setIsLoading(false);
+      }).catch(() => {
+        console.error("Error fetching central message");
         setIsFetchingComplete(true); // Ensure it's set even on error
         setIsLoading(false); // Stop loading spinner
       });
@@ -78,16 +110,13 @@ export default function ScriptGenerator() {
       setIsLoading(true); // Start loading spinner
       if (currentStep === 1) {
         const newProjectId = `project_${Math.random().toString(36).substr(2, 9)}`;
-        console.log("newProjectId", newProjectId);
         setProjectId(newProjectId);
         setPendingStep(1);
         setIsFetchingComplete(false); // Reset fetching complete
       } else if (currentStep === 2) {
         try {
-          await fetchCentralMessage();
-          setCurrentStep((prevStep) => prevStep + 1);
-          setIsFetchingComplete(true); // Set fetching complete after fetching
-          setIsLoading(false); // Stop loading spinner
+          setPendingStep(2); // Set fetching complete after fetching
+          setIsFetchingComplete(false); // Stop loading spinner
 
         } catch {
           console.error("Error fetching central message");
@@ -98,7 +127,7 @@ export default function ScriptGenerator() {
   };
 
   return (
-    <div>
+    <div className="fade-in">
         <GeneratorCard
           className={animationClass}
           currentStep={currentStep}
