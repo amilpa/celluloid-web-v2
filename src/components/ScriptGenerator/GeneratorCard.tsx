@@ -1,54 +1,54 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
-import { generateScript } from "@/lib/api/script-service";
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Loader2 } from 'lucide-react'
+import { generateScript } from '@/lib/api/script-service'
 import {
   InputField,
   TextareaField,
   SelectField,
-} from "@/components/ui/form-elements";
-import { toast } from "@/components/ui/use-toast";
-import ScriptDisplay from "@/components/ScriptDisplay";
+} from '@/components/ui/form-elements'
+import { toast } from '@/components/ui/use-toast'
+import ScriptDisplay from '@/components/ScriptDisplay'
 
-import "./animation.css";
+import './animation.css'
 
 const genres = [
-  { value: "action", label: "Action" },
-  { value: "comedy", label: "Comedy" },
-  { value: "drama", label: "Drama" },
-  { value: "thriller", label: "Thriller" },
-  { value: "sci-fi", label: "Science Fiction" },
-  { value: "fantasy", label: "Fantasy" },
-  { value: "horror", label: "Horror" },
-  { value: "romance", label: "Romance" },
-];
+  { value: 'action', label: 'Action' },
+  { value: 'comedy', label: 'Comedy' },
+  { value: 'drama', label: 'Drama' },
+  { value: 'thriller', label: 'Thriller' },
+  { value: 'sci-fi', label: 'Science Fiction' },
+  { value: 'fantasy', label: 'Fantasy' },
+  { value: 'horror', label: 'Horror' },
+  { value: 'romance', label: 'Romance' },
+]
 
 const tones = [
-  { value: "dramatic", label: "Dramatic" },
-  { value: "comedic", label: "Comedic" },
-  { value: "suspenseful", label: "Suspenseful" },
-  { value: "inspiring", label: "Inspiring" },
-  { value: "dark", label: "Dark" },
-  { value: "lighthearted", label: "Lighthearted" },
-  { value: "satirical", label: "Satirical" },
-  { value: "poignant", label: "Poignant" },
-];
+  { value: 'dramatic', label: 'Dramatic' },
+  { value: 'comedic', label: 'Comedic' },
+  { value: 'suspenseful', label: 'Suspenseful' },
+  { value: 'inspiring', label: 'Inspiring' },
+  { value: 'dark', label: 'Dark' },
+  { value: 'lighthearted', label: 'Lighthearted' },
+  { value: 'satirical', label: 'Satirical' },
+  { value: 'poignant', label: 'Poignant' },
+]
 
 interface GeneratorCardProps {
-  onNext: () => void;
-  logline: string;
-  abstract: string;
-  centralMessage: string;
-  genre: string;
-  characters: string;
-  setLogline: (value: string) => void;
-  setAbstract: (value: string) => void;
-  setCentralMessage: (value: string) => void;
-  setGenre: (value: string) => void;
-  setCharacters: (value: string) => void;
-  currentStep: number;
-  className: string;
-  loading: boolean;
+  onNext: () => void
+  logline: string
+  abstract: string
+  centralMessage: string
+  genre: string
+  characters: string
+  setLogline: (value: string) => void
+  setAbstract: (value: string) => void
+  setCentralMessage: (value: string) => void
+  setGenre: (value: string) => void
+  setCharacters: (value: string) => void
+  currentStep: number
+  className: string
+  loading: boolean
 }
 
 export const GeneratorCard: React.FC<GeneratorCardProps> = ({
@@ -67,137 +67,137 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
   className,
   loading,
 }) => {
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false)
   const [scriptResult, setScriptResult] = useState<null | {
-    title: string;
-    script: string;
-    synopsis: string;
-  }>(null);
+    title: string
+    script: string
+    synopsis: string
+  }>(null)
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     switch (name) {
-      case "logline":
-        setLogline(value);
-        break;
-      case "abstract":
-        setAbstract(value);
-        break;
-      case "centralMessage":
-        setCentralMessage(value);
-        break;
-      case "characters":
-        setCharacters(value);
-        break;
+      case 'logline':
+        setLogline(value)
+        break
+      case 'abstract':
+        setAbstract(value)
+        break
+      case 'centralMessage':
+        setCentralMessage(value)
+        break
+      case 'characters':
+        setCharacters(value)
+        break
       default:
-        break;
+        break
     }
-  };
+  }
 
   const handleSelectChange = (name: string, value: string) => {
-    if (name === "genre") {
-      setGenre(value);
+    if (name === 'genre') {
+      setGenre(value)
     }
-  };
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
 
     // Validate form only on submission
     if (!logline.trim() || !characters.trim() || !abstract.trim()) {
       toast({
-        title: "Missing information",
-        description: "Please fill in all required fields",
-        variant: "destructive",
-      });
-      return;
+        title: 'Missing information',
+        description: 'Please fill in all required fields',
+        variant: 'destructive',
+      })
+      return
     }
 
-    setIsGenerating(true);
-    setScriptResult(null);
+    setIsGenerating(true)
+    setScriptResult(null)
 
     try {
       const result = await generateScript({
         genre,
         premise: abstract,
         characters,
-        setting: "",
-        tone: "dramatic",
-      });
+        setting: '',
+        tone: 'dramatic',
+      })
 
-      if (result.status === "success") {
+      if (result.status === 'success') {
         setScriptResult({
           title: result.title,
           script: result.script,
           synopsis: result.synopsis,
-        });
+        })
         toast({
-          title: "Script generated",
-          description: "Your script has been successfully created",
-        });
+          title: 'Script generated',
+          description: 'Your script has been successfully created',
+        })
       } else {
         toast({
-          title: "Error",
-          description: result.message || "Failed to generate script",
-          variant: "destructive",
-        });
+          title: 'Error',
+          description: result.message || 'Failed to generate script',
+          variant: 'destructive',
+        })
       }
     } catch (error) {
       toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        variant: "destructive",
-      });
+        title: 'Error',
+        description: 'An unexpected error occurred',
+        variant: 'destructive',
+      })
     } finally {
-      setIsGenerating(false);
+      setIsGenerating(false)
     }
-  };
+  }
 
   const resetForm = () => {
-    setScriptResult(null);
+    setScriptResult(null)
     window.scrollTo({
-      top: document.getElementById("create")?.offsetTop || 0,
-      behavior: "smooth",
-    });
-  };
+      top: document.getElementById('create')?.offsetTop || 0,
+      behavior: 'smooth',
+    })
+  }
 
   const validateStep = () => {
     switch (currentStep) {
       case 1:
-        return abstract.trim() !== "";
+        return abstract.trim() !== ''
       case 2:
-        return logline.trim() !== "" && abstract.trim() !== "";
+        return logline.trim() !== '' && abstract.trim() !== ''
       case 3:
         return (
-          logline.trim() !== "" &&
-          abstract.trim() !== "" &&
-          centralMessage.trim() !== ""
-        );
+          logline.trim() !== '' &&
+          abstract.trim() !== '' &&
+          centralMessage.trim() !== ''
+        )
       case 4:
         return (
-          logline.trim() !== "" &&
-          abstract.trim() !== "" &&
-          centralMessage.trim() !== "" &&
-          characters.trim() !== ""
-        );
+          logline.trim() !== '' &&
+          abstract.trim() !== '' &&
+          centralMessage.trim() !== '' &&
+          characters.trim() !== ''
+        )
       default:
-        return false;
+        return false
     }
-  };
+  }
 
   const handleNext = () => {
     if (validateStep()) {
-      onNext();
+      onNext()
     } else {
       toast({
-        title: "Missing information",
-        description: "Please fill in all required fields for this step",
-        variant: "destructive",
-      });
+        title: 'Missing information',
+        description: 'Please fill in all required fields for this step',
+        variant: 'destructive',
+      })
     }
-  };
+  }
 
   return (
     <section id="create" className="py-20 mt-8">
@@ -241,7 +241,7 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
                         label="Genre"
                         options={genres}
                         value={genre}
-                        onChange={(value) => handleSelectChange("genre", value)}
+                        onChange={(value) => handleSelectChange('genre', value)}
                       />
                       <TextareaField
                         label="Premise"
@@ -263,18 +263,20 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
                           label="Genre"
                           options={genres}
                           value={genre}
-                          onChange={(value) => handleSelectChange("genre", value)}
+                          onChange={(value) =>
+                            handleSelectChange('genre', value)
+                          }
                         />
                       </div>
-                        <TextareaField
-                          label="Logline"
-                          id="logline"
-                          name="logline"
-                          placeholder="Briefly describe your story concept"
-                          value={logline}
-                          onChange={handleInputChange}
-                          rows={3}
-                        />
+                      <TextareaField
+                        label="Logline"
+                        id="logline"
+                        name="logline"
+                        placeholder="Briefly describe your story concept"
+                        value={logline}
+                        onChange={handleInputChange}
+                        rows={3}
+                      />
                       <TextareaField
                         label="Premise"
                         id="premise"
@@ -296,7 +298,9 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
                           label="Genre"
                           options={genres}
                           value={genre}
-                          onChange={(value) => handleSelectChange("genre", value)}
+                          onChange={(value) =>
+                            handleSelectChange('genre', value)
+                          }
                         />
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
@@ -341,7 +345,9 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
                           label="Genre"
                           options={genres}
                           value={genre}
-                          onChange={(value) => handleSelectChange("genre", value)}
+                          onChange={(value) =>
+                            handleSelectChange('genre', value)
+                          }
                         />
                         <InputField
                           label="Logline"
@@ -410,7 +416,7 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
                             Generating Script...
                           </>
                         ) : (
-                          "Generate Script"
+                          'Generate Script'
                         )}
                       </Button>
                     )}
@@ -422,7 +428,7 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default GeneratorCard;
+export default GeneratorCard
