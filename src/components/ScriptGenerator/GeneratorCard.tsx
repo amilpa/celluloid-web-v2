@@ -229,7 +229,7 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
           ) : (
             <>
               {loading && (
-                <div className="flex justify-center items-center mb-4">
+                <div className="flex justify-center items-center mt-44">
                   <Loader2 className="h-8 w-8 animate-spin" />
                 </div>
               )}
