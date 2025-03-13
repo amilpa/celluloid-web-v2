@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import {
   Card,
   CardContent,
@@ -6,39 +6,39 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { PlusCircle, FileText, Clock, Calendar } from "lucide-react";
-import { Link } from "react-router-dom";
-import Header from "@/components/Header";
+} from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { PlusCircle, FileText, Clock, Calendar } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import Header from '@/components/Header'
 
 // Sample script projects data
 const scriptProjects = [
   {
     id: 1,
-    title: "The Midnight Hour",
-    genre: "Thriller",
-    description: "A tense thriller about a night that changes everything.",
-    lastEdited: "2 days ago",
-    createdAt: "June 15, 2023",
+    title: 'The Midnight Hour',
+    genre: 'Thriller',
+    description: 'A tense thriller about a night that changes everything.',
+    lastEdited: '2 days ago',
+    createdAt: 'June 15, 2023',
   },
   {
     id: 2,
-    title: "Echoes of Tomorrow",
-    genre: "Science Fiction",
-    description: "A journey through time and space that questions reality.",
-    lastEdited: "1 week ago",
-    createdAt: "May 22, 2023",
+    title: 'Echoes of Tomorrow',
+    genre: 'Science Fiction',
+    description: 'A journey through time and space that questions reality.',
+    lastEdited: '1 week ago',
+    createdAt: 'May 22, 2023',
   },
   {
     id: 3,
-    title: "The Last Sunset",
-    genre: "Drama",
-    description: "An emotional story about letting go and finding peace.",
-    lastEdited: "3 days ago",
-    createdAt: "July 3, 2023",
+    title: 'The Last Sunset',
+    genre: 'Drama',
+    description: 'An emotional story about letting go and finding peace.',
+    lastEdited: '3 days ago',
+    createdAt: 'July 3, 2023',
   },
-];
+]
 
 const Dashboard = () => {
   return (
@@ -68,7 +68,7 @@ const Dashboard = () => {
             >
               <CardHeader className="bg-primary/5 pb-4">
                 <CardTitle className="text-xl">{project.title}</CardTitle>
-                <CardDescription className="bg-primary/20 text-primary-foreground w-fit px-2 py-0.5 rounded text-xs">
+                <CardDescription className="bg-primary/30 text-white w-fit px-2 py-0.5 rounded text-xs">
                   {project.genre}
                 </CardDescription>
               </CardHeader>
@@ -114,7 +114,7 @@ const Dashboard = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard
