@@ -1,20 +1,16 @@
-# Welcome to your Lovable project
+# AI Movie Script Generator
 
-## Project info
+Welcome to the AI Movie Script Generator project! This application uses multiple AI agents to collaboratively generate a complete movie script. The agents include Plot Agent, Character Agent, Dialogue Agent, Logline Agent, and more.
 
-**URL**: https://lovable.dev/projects/b35d5cd7-a4b2-4383-91b7-90b9eaeef461
+## Project Info
 
-## How can I edit this code?
+**URL**: https://work.in.progess.com
+
+## How Can I Edit This Code?
 
 There are several ways of editing your application.
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/b35d5cd7-a4b2-4383-91b7-90b9eaeef461) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
+### Use Your Preferred IDE
 
 If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
@@ -36,13 +32,13 @@ npm i
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Edit a File Directly in GitHub
 
 - Navigate to the desired file(s).
 - Click the "Edit" button (pencil icon) at the top right of the file view.
 - Make your changes and commit the changes.
 
-**Use GitHub Codespaces**
+### Use GitHub Codespaces
 
 - Navigate to the main page of your repository.
 - Click on the "Code" button (green button) near the top right.
@@ -50,20 +46,22 @@ npm run dev
 - Click on "New codespace" to launch a new Codespace environment.
 - Edit files directly within the Codespace and commit and push your changes once you're done.
 
-## What technologies are used for this project?
+## What Technologies Are Used for This Project?
 
-This project is built with .
+This project is built with:
 
 - Vite
 - TypeScript
 - React
-- shadcn-ui
+- Radix UI
 - Tailwind CSS
 
-## How can I deploy this project?
+## Screenshots
 
-Simply open [Lovable](https://lovable.dev/projects/b35d5cd7-a4b2-4383-91b7-90b9eaeef461) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+![Screenshot 1](public/screenshot-1.jpg)
+<br>
+<br>
+![Screenshot 2](public/screenshot-2.jpg)
+<br>
+<br>
+![Screenshot 3](public/screenshot-3.jpg)
