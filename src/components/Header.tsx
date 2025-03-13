@@ -79,14 +79,15 @@ export const Header = () => {
         </div>
       </div>
 
-      {location.pathname !== '/dashboard' && isScrolled && (
-        <div className="h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent mt-2">
-          <div
-            className="h-full bg-primary transition-all duration-300 ease-in-out"
-            style={{ width: `${scrollProgress * 100}%` }}
-          />
-        </div>
-      )}
+      {location.pathname in ['/dashboard', '/display', '/create'] &&
+        isScrolled && (
+          <div className="h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent mt-2">
+            <div
+              className="h-full bg-primary transition-all duration-300 ease-in-out"
+              style={{ width: `${scrollProgress * 100}%` }}
+            />
+          </div>
+        )}
     </header>
   )
 }
