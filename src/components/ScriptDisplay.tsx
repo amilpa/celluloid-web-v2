@@ -136,7 +136,7 @@ const ScriptDisplay = ({ title, synopsis, script }: ScriptDisplayProps) => {
               <div className="text-center mb-8 uppercase">
                 <h4 className="text-xl font-bold mb-4">{title}</h4>
                 <p className="text-sm">Written by</p>
-                <p className="text-sm">CinematicScribe AI</p>
+                <p className="text-sm">Celluloid AI</p>
               </div>
 
               {editableScript.split('\n\n').map((paragraph, i) => {

@@ -9,7 +9,13 @@ interface ProjectData {
   abstract: string
   centralMessage: string
   genre: string
-  characters: string
+  characterDetails: string
+  story_elements: {
+    main_character: string
+    primary_mission: string
+    up_against: string
+    at_stake: string
+  }
 }
 
 export default function ScriptGenerator() {
@@ -19,6 +25,7 @@ export default function ScriptGenerator() {
   const [centralMessage, setCentralMessage] = useState('')
   const [genre, setGenre] = useState('')
   const [characters, setCharacters] = useState('')
+  const [characterDetails, setCharacterDetails] = useState('')
   const [projectId, setProjectId] = useState<string | null>(null)
   const [animationClass, setAnimationClass] = useState('')
   const [pendingStep, setPendingStep] = useState<number | null>(null)
@@ -54,6 +61,37 @@ export default function ScriptGenerator() {
     }
   }
 
+  const fetchCharacters = async () => {
+    try {
+      const response = await axios.post(`${apiUrl}/character-agent`, {
+        abstract,
+        logline,
+        central_message: centralMessage,
+        character_details: characters,
+      })
+      console.log('response', response.data)
+      return response
+    } catch (error) {
+      console.error('Error fetching characters:', error)
+    }
+  }
+
+  // update all states in local storage using useEffect and projectId when child component edits it
+  useEffect(() => {
+    if (projectId) {
+      const projectData: ProjectData = {
+        logline,
+        abstract,
+        centralMessage,
+        genre,
+        characterDetails,
+        story_elements: JSON.parse(localStorage.getItem(projectId) || '{}')
+          .story_elements,
+      }
+      localStorage.setItem(projectId, JSON.stringify(projectData))
+    }
+  }, [logline, abstract, centralMessage, genre, projectId, characterDetails])
+
   useEffect(() => {
     if (projectId && pendingStep === 1) {
       fetchLogline()
@@ -63,9 +101,9 @@ export default function ScriptGenerator() {
             abstract,
             centralMessage,
             genre,
-            characters,
             story_elements: response.data.story_elements,
           }
+          console.log(projectData)
           localStorage.setItem(projectId, JSON.stringify(projectData))
           setCurrentStep((prevStep) => prevStep + 1)
           setPendingStep(null)
@@ -86,9 +124,30 @@ export default function ScriptGenerator() {
             abstract,
             centralMessage: response.data.central_message,
             genre,
-            characters,
             story_elements: JSON.parse(localStorage.getItem(projectId) || '{}')
               .story_elements,
+          }
+          localStorage.setItem(projectId, JSON.stringify(projectData))
+          setCurrentStep((prevStep) => prevStep + 1)
+          setPendingStep(null)
+          setIsFetchingComplete(true) // Set fetching complete
+          setIsLoading(false)
+        })
+        .catch(() => {
+          console.error('Error fetching central message')
+          setIsFetchingComplete(true) // Ensure it's set even on error
+          setIsLoading(false) // Stop loading spinner
+        })
+    }
+    if (projectId && pendingStep === 3) {
+      fetchCharacters()
+        .then((response) => {
+          const projectData = {
+            logline,
+            abstract,
+            centralMessage,
+            genre,
+            characterDetails: response.data,
           }
           localStorage.setItem(projectId, JSON.stringify(projectData))
           setCurrentStep((prevStep) => prevStep + 1)
@@ -129,6 +188,14 @@ export default function ScriptGenerator() {
           console.error('Error fetching central message')
           setIsLoading(false) // Stop loading spinner
         }
+      } else if (currentStep === 3) {
+        try {
+          setPendingStep(3) // Set fetching complete after fetching
+          setIsFetchingComplete(false) // Stop loading spinner
+        } catch {
+          console.error('Error fetching central message')
+          setIsLoading(false) // Stop loading spinner
+        }
       }
     }, 500)
   }
@@ -139,6 +206,7 @@ export default function ScriptGenerator() {
         className={animationClass}
         currentStep={currentStep}
         loading={isLoading}
+        characterDetails={characterDetails}
         onNext={handleNextStep}
         logline={logline}
         abstract={abstract}
@@ -150,6 +218,7 @@ export default function ScriptGenerator() {
         setCentralMessage={setCentralMessage}
         setGenre={setGenre}
         setCharacters={setCharacters}
+        setCharacterDetails={setCharacterDetails}
       />
     </div>
   )

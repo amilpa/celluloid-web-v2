@@ -49,6 +49,8 @@ interface GeneratorCardProps {
   currentStep: number
   className: string
   loading: boolean
+  characterDetails?: string
+  setCharacterDetails?: (value: string) => void
 }
 
 export const GeneratorCard: React.FC<GeneratorCardProps> = ({
@@ -58,9 +60,11 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
   centralMessage,
   genre,
   characters,
+  characterDetails,
   setLogline,
   setAbstract,
   setCentralMessage,
+  setCharacterDetails,
   setGenre,
   setCharacters,
   currentStep,
@@ -334,6 +338,15 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
                           helperText="E.g., 'Love conquers all', 'Good triumphs over evil'"
                           rows={3}
                         />
+                        <TextareaField
+                          label="Characters"
+                          id="characters"
+                          name="characters"
+                          placeholder="List main characters, separated by commas"
+                          value={characters}
+                          onChange={handleInputChange}
+                          helperText="E.g., John - detective who investigates a murder"
+                        />
                       </div>
                     </div>
                   )}
@@ -349,16 +362,17 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
                             handleSelectChange('genre', value)
                           }
                         />
-                        <InputField
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
+                        <TextareaField
                           label="Logline"
                           id="logline"
                           name="logline"
                           placeholder="Briefly describe your story concept"
                           value={logline}
                           onChange={handleInputChange}
+                          rows={3}
                         />
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
                         <TextareaField
                           label="Premise"
                           id="premise"
@@ -385,7 +399,7 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
                           id="characters"
                           name="characters"
                           placeholder="List main characters, separated by commas"
-                          value={characters}
+                          value={characterDetails}
                           onChange={handleInputChange}
                           helperText="E.g., John - detective who investigates a murder"
                         />
