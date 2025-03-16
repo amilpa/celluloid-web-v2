@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -13,14 +13,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
-
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 interface ScriptDisplayProps {
   title: string
   synopsis: string
   script: string
 }
-
-const LINES_PER_PAGE = 25 // Approximate number of lines per page
 
 const ScriptDisplay = ({ title, synopsis, script }: ScriptDisplayProps) => {
   const [copied, setCopied] = useState(false)
@@ -28,24 +27,42 @@ const ScriptDisplay = ({ title, synopsis, script }: ScriptDisplayProps) => {
   const [pages, setPages] = useState<string[]>([])
   const [totalPages, setTotalPages] = useState(1)
   const [editableScript, setEditableScript] = useState(script)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // Split the script into pages
-    const scriptLines = script.split('\n')
-    const pagesArray: string[] = []
-
-    for (let i = 0; i < scriptLines.length; i += LINES_PER_PAGE) {
-      pagesArray.push(scriptLines.slice(i, i + LINES_PER_PAGE).join('\n'))
+    const calculateLinesPerPage = () => {
+      if (containerRef.current) {
+        const containerHeight = containerRef.current.clientHeight
+        const lineHeight = parseFloat(
+          getComputedStyle(containerRef.current).lineHeight
+        )
+        return Math.floor(containerHeight / lineHeight)
+      }
+      return 25 // Default value
     }
 
-    if (pagesArray.length === 0) {
-      pagesArray.push(script)
+    const splitScriptIntoPages = (script: string, linesPerPage: number) => {
+      const scriptLines = script.split('\n')
+      const pagesArray: string[] = []
+
+      for (let i = 0; i < scriptLines.length; i += linesPerPage) {
+        pagesArray.push(scriptLines.slice(i, i + linesPerPage).join('\n'))
+      }
+
+      if (pagesArray.length === 0) {
+        pagesArray.push(script)
+      }
+
+      return pagesArray
     }
+
+    const linesPerPage = calculateLinesPerPage()
+    const pagesArray = splitScriptIntoPages(script, linesPerPage)
 
     setPages(pagesArray)
     setTotalPages(pagesArray.length)
     setEditableScript(script)
-  }, [script])
+  }, [script, containerRef])
 
   const copyToClipboard = async () => {
     try {
@@ -80,10 +97,65 @@ const ScriptDisplay = ({ title, synopsis, script }: ScriptDisplayProps) => {
     })
   }
 
+  const downloadPDF = async () => {
+    const input = containerRef.current
+    if (input) {
+      const canvas = await html2canvas(input)
+      const imgData = canvas.toDataURL('image/png')
+      const pdf = new jsPDF('p', 'mm', 'a4')
+      const imgProps = pdf.getImageProperties(imgData)
+      const pdfWidth = pdf.internal.pageSize.getWidth()
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight)
+      pdf.save(`${title.replace(/\s+/g, '_')}.pdf`)
+
+      toast({
+        title: 'Downloaded',
+        description: 'Script has been downloaded successfully as PDF',
+      })
+    }
+  }
+
   const navigateToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page)
     }
+  }
+
+  const handleScriptEdit = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setEditableScript(e.target.value)
+
+    const calculateLinesPerPage = () => {
+      if (containerRef.current) {
+        const containerHeight = containerRef.current.clientHeight
+        const lineHeight = parseFloat(
+          getComputedStyle(containerRef.current).lineHeight
+        )
+        return Math.floor(containerHeight / lineHeight)
+      }
+      return 25 // Default value
+    }
+
+    const splitScriptIntoPages = (script: string, linesPerPage: number) => {
+      const scriptLines = script.split('\n')
+      const pagesArray: string[] = []
+
+      for (let i = 0; i < scriptLines.length; i += linesPerPage) {
+        pagesArray.push(scriptLines.slice(i, i + linesPerPage).join('\n'))
+      }
+
+      if (pagesArray.length === 0) {
+        pagesArray.push(script)
+      }
+
+      return pagesArray
+    }
+
+    const linesPerPage = calculateLinesPerPage()
+    const pagesArray = splitScriptIntoPages(e.target.value, linesPerPage)
+
+    setPages(pagesArray)
+    setTotalPages(pagesArray.length)
   }
 
   const renderPageNumbers = () => {
@@ -167,6 +239,15 @@ const ScriptDisplay = ({ title, synopsis, script }: ScriptDisplayProps) => {
               <Download className="h-4 w-4" />
               Download
             </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={downloadPDF}
+              className="flex gap-1 items-center"
+            >
+              <Download className="h-4 w-4" />
+              Download PDF
+            </Button>
           </div>
         </div>
       </div>
@@ -190,7 +271,10 @@ const ScriptDisplay = ({ title, synopsis, script }: ScriptDisplayProps) => {
 
         <TabsContent value="formatted-view" className="m-0">
           <div className="p-6 md:p-8 flex flex-col items-center">
-            <div className="bg-white dark:bg-black border rounded-lg p-8 shadow-lg min-h-[500px] w-full max-w-6xl h-[800px] relative perspective-800 transform-gpu mb-6">
+            <div
+              ref={containerRef}
+              className="bg-white dark:bg-black border rounded-lg p-8 shadow-lg min-h-[500px] w-full max-w-6xl h-[800px] relative perspective-800 transform-gpu mb-6"
+            >
               <div className="absolute inset-0 bg-gradient-to-tr from-gray-100/50 to-transparent dark:from-gray-900/50 rounded-lg pointer-events-none" />
               <div className="max-w-6xl h-[700px] mx-auto font-mono">
                 {pages[currentPage - 1]?.split('\n\n').map((paragraph, i) => {
@@ -272,7 +356,10 @@ const ScriptDisplay = ({ title, synopsis, script }: ScriptDisplayProps) => {
 
         <TabsContent value="edit-view" className="m-0">
           <div className="p-6 md:p-8 flex flex-col items-center">
-            <div className="bg-white dark:bg-black border rounded-lg p-8 shadow-lg min-h-[500px] h-[800px] w-full max-w-6xl relative perspective-800 transform-gpu mb-6">
+            <div
+              ref={containerRef}
+              className="bg-white dark:bg-black border rounded-lg p-8 shadow-lg min-h-[500px] h-[800px] w-full max-w-6xl relative perspective-800 transform-gpu mb-6"
+            >
               <div className="absolute inset-0 bg-gradient-to-tr from-gray-100/50 to-transparent dark:from-gray-900/50 rounded-lg pointer-events-none" />
               <Textarea
                 className="font-mono w-full h-[700px] bg-transparent border-none focus-visible:ring-0 resize-none"
