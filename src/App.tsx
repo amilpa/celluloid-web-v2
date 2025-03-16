@@ -7,10 +7,38 @@ import Index from './pages/Index'
 import Dashboard from './pages/Dashboard'
 import NotFound from './pages/NotFound'
 import GenerateScript from './pages/GenerateScript'
-
 import DisplayScript from './pages/DisplayScript'
+import { useEffect } from 'react'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { auth, provider } from '@/lib/firebaseConfig'
+import { signInWithPopup } from 'firebase/auth'
+import { useNavigate } from 'react-router-dom'
 
 const queryClient = new QueryClient()
+
+const ProtectedRoute = ({ children }) => {
+  const [user, loading] = useAuthState(auth)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const signIn = async () => {
+      if (!loading && !user) {
+        try {
+          navigate('/')
+          await signInWithPopup(auth, provider)
+          navigate('/create')
+        } catch (error) {
+          console.error('Error during Google sign-in:', error)
+        }
+      }
+    }
+    signIn()
+  }, [user, loading, navigate])
+
+  if (loading) return null
+
+  return user ? children : null
+}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -20,11 +48,39 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/create" element={<GenerateScript />} />
-          <Route path="/display" element={<DisplayScript />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/create"
+            element={
+              <ProtectedRoute>
+                <GenerateScript />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/display"
+            element={
+              <ProtectedRoute>
+                <DisplayScript />
+              </ProtectedRoute>
+            }
+          />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
+          <Route
+            path="*"
+            element={
+              <ProtectedRoute>
+                <NotFound />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

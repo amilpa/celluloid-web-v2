@@ -9,7 +9,7 @@ export const Footer = () => {
             <div className="flex items-center gap-2 mb-4">
               <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
                 <span className="text-primary-foreground font-semibold text-sm">
-                  CS
+                  CL
                 </span>
               </div>
               <span className="font-display font-medium">Celluloid</span>

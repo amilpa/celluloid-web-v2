@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { useScrollProgress } from '@/lib/utils/animation'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { getAuth } from 'firebase/auth'
 
 import { useLocation } from 'react-router-dom'
 
@@ -10,10 +11,21 @@ export const Header = () => {
   const scrollProgress = useScrollProgress()
 
   const location = useLocation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     setIsScrolled(scrollProgress > 0)
   }, [scrollProgress])
+
+  const handleLogout = async () => {
+    const auth = getAuth()
+    try {
+      navigate('/')
+      await auth.signOut()
+    } catch (error) {
+      console.error('Logout error:', error)
+    }
+  }
 
   return (
     <header
@@ -69,13 +81,23 @@ export const Header = () => {
             </Link>
           </nav>
 
-          <Link to="/create">
-            <div className="flex items-center gap-4">
-              <Button size="sm" className="animate-fade-in">
-                Get Started
+          <div className="flex items-center gap-4">
+            {['/dashboard', '/create'].includes(location.pathname) ? (
+              <Button
+                size="sm"
+                className="text-sm font-medium hover:text-primary transition-colors w-[101px]"
+                onClick={handleLogout}
+              >
+                Logout
               </Button>
-            </div>
-          </Link>
+            ) : (
+              <Link to="/create">
+                <Button size="sm" className="animate-fade-in w-[101px]">
+                  Get Started
+                </Button>
+              </Link>
+            )}
+          </div>
         </div>
       </div>
 

@@ -206,7 +206,6 @@ export default function ScriptGenerator() {
         className={animationClass}
         currentStep={currentStep}
         loading={isLoading}
-        characterDetails={characterDetails}
         onNext={handleNextStep}
         logline={logline}
         abstract={abstract}
@@ -218,7 +217,8 @@ export default function ScriptGenerator() {
         setCentralMessage={setCentralMessage}
         setGenre={setGenre}
         setCharacters={setCharacters}
-        setCharacterDetails={setCharacterDetails}
+        setCurrentStep={setCurrentStep}
+        getCharacterDetails={fetchCharacters}
       />
     </div>
   )

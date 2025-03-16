@@ -2,11 +2,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Loader2 } from 'lucide-react'
 import { generateScript } from '@/lib/api/script-service'
-import {
-  InputField,
-  TextareaField,
-  SelectField,
-} from '@/components/ui/form-elements'
+import { TextareaField, SelectField } from '@/components/ui/form-elements'
 import { toast } from '@/components/ui/use-toast'
 import ScriptDisplay from '@/components/ScriptDisplay'
 
@@ -34,6 +30,10 @@ const tones = [
   { value: 'poignant', label: 'Poignant' },
 ]
 
+interface CharacterDetails {
+  main_character_profiles: unknown
+  supporting_character_profiles: unknown
+}
 interface GeneratorCardProps {
   onNext: () => void
   logline: string
@@ -46,11 +46,15 @@ interface GeneratorCardProps {
   setCentralMessage: (value: string) => void
   setGenre: (value: string) => void
   setCharacters: (value: string) => void
+  setCurrentStep: (value: number) => void
   currentStep: number
   className: string
   loading: boolean
-  characterDetails?: string
-  setCharacterDetails?: (value: string) => void
+  characterDetails?: {
+    main_character_profiles: unknown
+    supporting_character_profiles: unknown
+  }
+  getCharacterDetails?: () => CharacterDetails
 }
 
 export const GeneratorCard: React.FC<GeneratorCardProps> = ({
@@ -60,16 +64,16 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
   centralMessage,
   genre,
   characters,
-  characterDetails,
   setLogline,
   setAbstract,
   setCentralMessage,
-  setCharacterDetails,
   setGenre,
+  setCurrentStep,
   setCharacters,
   currentStep,
   className,
   loading,
+  getCharacterDetails,
 }) => {
   const [isGenerating, setIsGenerating] = useState(false)
   const [scriptResult, setScriptResult] = useState<null | {
@@ -110,7 +114,13 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
     e.preventDefault()
 
     // Validate form only on submission
-    if (!logline.trim() || !characters.trim() || !abstract.trim()) {
+    if (
+      !logline.trim() ||
+      !characters.trim() ||
+      !abstract.trim() ||
+      !genre ||
+      !centralMessage.trim()
+    ) {
       toast({
         title: 'Missing information',
         description: 'Please fill in all required fields',
@@ -123,12 +133,14 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
     setScriptResult(null)
 
     try {
+      const characterDetails = await getCharacterDetails()
       const result = await generateScript({
+        title: 'Untitled Script',
         genre,
-        premise: abstract,
-        characters,
-        setting: '',
-        tone: 'dramatic',
+        logline,
+        centralMessage,
+        abstract,
+        characterDetails,
       })
 
       if (result.status === 'success') {
@@ -161,6 +173,15 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
 
   const resetForm = () => {
     setScriptResult(null)
+
+    // reset every state
+    setCurrentStep(1)
+    setLogline('')
+    setAbstract('')
+    setCentralMessage('')
+    setGenre('')
+    setCharacters('')
+
     window.scrollTo({
       top: document.getElementById('create')?.offsetTop || 0,
       behavior: 'smooth',
@@ -193,6 +214,11 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
 
   const handleNext = () => {
     if (validateStep()) {
+      // scroll to top of page
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      })
       onNext()
     } else {
       toast({
@@ -351,64 +377,8 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
                     </div>
                   )}
 
-                  {currentStep === 4 && (
-                    <div className="grid grid-cols-1 gap-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <SelectField
-                          label="Genre"
-                          options={genres}
-                          value={genre}
-                          onChange={(value) =>
-                            handleSelectChange('genre', value)
-                          }
-                        />
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
-                        <TextareaField
-                          label="Logline"
-                          id="logline"
-                          name="logline"
-                          placeholder="Briefly describe your story concept"
-                          value={logline}
-                          onChange={handleInputChange}
-                          rows={3}
-                        />
-                        <TextareaField
-                          label="Premise"
-                          id="premise"
-                          name="abstract"
-                          placeholder="Briefly describe your story concept"
-                          value={abstract}
-                          onChange={handleInputChange}
-                          helperText="What is your story about? Give a brief summary of the main plot."
-                          rows={3}
-                          className="col-span-2"
-                        />
-                        <TextareaField
-                          label="Central Message"
-                          id="centralMessage"
-                          name="centralMessage"
-                          placeholder="What is the central message or theme of your story?"
-                          value={centralMessage}
-                          onChange={handleInputChange}
-                          helperText="E.g., 'Love conquers all', 'Good triumphs over evil'"
-                          rows={3}
-                        />
-                        <TextareaField
-                          label="Characters"
-                          id="characters"
-                          name="characters"
-                          placeholder="List main characters, separated by commas"
-                          value={characterDetails}
-                          onChange={handleInputChange}
-                          helperText="E.g., John - detective who investigates a murder"
-                        />
-                      </div>
-                    </div>
-                  )}
-
                   <div className="flex justify-center mt-6 pt-4">
-                    {currentStep < 4 ? (
+                    {currentStep < 3 ? (
                       <Button
                         type="button"
                         size="lg"
