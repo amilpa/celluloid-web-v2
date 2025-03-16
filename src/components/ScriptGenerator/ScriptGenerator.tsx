@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import GeneratorCard from './GeneratorCard'
 
 import './animation.css'
 
+interface CharacterDetails {
+  main_character_profiles: unknown
+  supporting_character_profiles: unknown
+}
 interface ProjectData {
   logline: string
   abstract: string
@@ -61,7 +65,9 @@ export default function ScriptGenerator() {
     }
   }
 
-  const fetchCharacters = async () => {
+  const fetchCharacters: () => Promise<
+    AxiosResponse<CharacterDetails>
+  > = async () => {
     try {
       const response = await axios.post(`${apiUrl}/character-agent`, {
         abstract,

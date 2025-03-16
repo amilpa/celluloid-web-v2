@@ -6,6 +6,8 @@ import { TextareaField, SelectField } from '@/components/ui/form-elements'
 import { toast } from '@/components/ui/use-toast'
 import ScriptDisplay from '@/components/ScriptDisplay'
 
+import { AxiosResponse } from 'axios'
+
 import './animation.css'
 
 const genres = [
@@ -54,7 +56,7 @@ interface GeneratorCardProps {
     main_character_profiles: unknown
     supporting_character_profiles: unknown
   }
-  getCharacterDetails?: () => CharacterDetails
+  getCharacterDetails?: () => Promise<AxiosResponse<CharacterDetails, unknown>>
 }
 
 export const GeneratorCard: React.FC<GeneratorCardProps> = ({
@@ -133,7 +135,8 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
     setScriptResult(null)
 
     try {
-      const characterDetails = await getCharacterDetails()
+      const characterDetailsResponse = await getCharacterDetails()
+      const characterDetails = characterDetailsResponse.data
       const result = await generateScript({
         title: 'Untitled Script',
         genre,
