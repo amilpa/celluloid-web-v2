@@ -5,8 +5,8 @@ import GeneratorCard from './GeneratorCard'
 import './animation.css'
 
 interface CharacterDetails {
-  main_character_profiles: unknown
-  supporting_character_profiles: unknown
+  main_characters: []
+  supporting_characters: []
 }
 interface ProjectData {
   logline: string
@@ -75,7 +75,6 @@ export default function ScriptGenerator() {
         central_message: centralMessage,
         character_details: characters,
       })
-      console.log('response', response.data)
       return response
     } catch (error) {
       console.error('Error fetching characters:', error)

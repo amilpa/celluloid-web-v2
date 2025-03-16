@@ -29,7 +29,9 @@ export const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 mr-[var(--removed-body-scroll-bar-size)] transition-none ${
+      className={`${
+        location.pathname === '/create' ? 'relative' : 'fixed'
+      } top-0 left-0 right-0 z-50 transition-all duration-300 mr-[var(--removed-body-scroll-bar-size)] transition-none ${
         location.pathname != '/dashboard' && isScrolled
           ? 'py-2 glass'
           : 'py-4 bg-transparent'

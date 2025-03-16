@@ -56,7 +56,7 @@ const ScriptDisplay = ({ title, synopsis, script }: ScriptDisplayProps) => {
   }
 
   return (
-    <div className="glass-card overflow-hidden animate-scale-in w-[1400px] mt-20">
+    <div className="glass-card overflow-hidden animate-scale-in mt-0 w-[895px]">
       <div className="p-6 md:p-8 border-b">
         <div className="flex items-start justify-between">
           <div>
@@ -141,10 +141,15 @@ const ScriptDisplay = ({ title, synopsis, script }: ScriptDisplayProps) => {
 
               {editableScript.split('\n\n').map((paragraph, i) => {
                 // Format based on screenplay conventions
-                if (paragraph.match(/^[A-Z\s]+$/)) {
+                paragraph = paragraph.replace(/\*\*/g, '')
+                if (paragraph.match(/^# Scene \d+/)) {
                   // Scene headings
+                  paragraph = paragraph.replace(/^# /, '')
                   return (
-                    <p key={i} className="font-bold my-4">
+                    <p
+                      key={i}
+                      className="font-bold my-4 underline underline-offset-4"
+                    >
                       {paragraph}
                     </p>
                   )
@@ -158,12 +163,13 @@ const ScriptDisplay = ({ title, synopsis, script }: ScriptDisplayProps) => {
                 } else if (paragraph.includes('(') && paragraph.includes(')')) {
                   // Parentheticals
                   return (
-                    <p key={i} className="text-center italic my-1">
+                    <p key={i} className="text-center italic my-10">
                       {paragraph}
                     </p>
                   )
                 } else {
                   // Action or dialogue
+                  paragraph = paragraph.replace(/^# [A-Z\s.-]+$/, '    ')
                   return (
                     <p key={i} className="my-3">
                       {paragraph}

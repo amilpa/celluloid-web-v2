@@ -33,8 +33,8 @@ const tones = [
 ]
 
 interface CharacterDetails {
-  main_character_profiles: unknown
-  supporting_character_profiles: unknown
+  main_characters: []
+  supporting_characters: []
 }
 interface GeneratorCardProps {
   onNext: () => void
@@ -54,7 +54,7 @@ interface GeneratorCardProps {
   loading: boolean
   characterDetails?: {
     main_character_profiles: unknown
-    supporting_character_profiles: unknown
+    supporting_character_profiles: []
   }
   getCharacterDetails?: () => Promise<AxiosResponse<CharacterDetails, unknown>>
 }
@@ -135,15 +135,22 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
     setScriptResult(null)
 
     try {
-      const characterDetailsResponse = await getCharacterDetails()
-      const characterDetails = characterDetailsResponse.data
+      // const characterDetailsResponse = await getCharacterDetails()
+      // const characterDetailsCurrent = characterDetailsResponse.data
+      // console.log('characterDetailsCurrent', characterDetailsCurrent)
       const result = await generateScript({
         title: 'Untitled Script',
         genre,
         logline,
         centralMessage,
         abstract,
-        characterDetails,
+        characterDetails: {
+          // main_character_profiles: characterDetailsCurrent.main_characters,
+          main_character_profiles: [],
+          // supporting_character_profiles:
+          //   characterDetailsCurrent.supporting_characters,
+          supporting_character_profiles: [],
+        },
       })
 
       if (result.status === 'success') {
@@ -233,32 +240,36 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
   }
 
   return (
-    <section id="create" className="py-20 mt-8">
+    <section id="create" className={`${scriptResult ? 'pb-20' : 'py-20'} mt-8`}>
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="font-display text-4xl font-medium mb-4">
-              Create Your Script
-            </h2>
-            <p className="text-muted-foreground text-lg">
-              Let our AI crew transform your ideas into a professional
-              screenplay
-            </p>
+          <div className={`${scriptResult ? 'hidden' : ''}`}>
+            <div className="text-center mb-12">
+              <h2 className="font-display text-4xl font-medium mb-4">
+                Create Your Script
+              </h2>
+              <p className="text-muted-foreground text-lg">
+                Let our AI crew transform your ideas into a professional
+                screenplay
+              </p>
+            </div>
           </div>
 
           {scriptResult ? (
-            <>
-              <ScriptDisplay
-                title={scriptResult.title}
-                synopsis={scriptResult.synopsis}
-                script={scriptResult.script}
-              />
-              <div className="mt-8 flex justify-center">
-                <Button onClick={resetForm} size="lg">
-                  Create Another Script
-                </Button>
-              </div>
-            </>
+            <div className="flex flex-col items-center justify-center">
+              <>
+                <ScriptDisplay
+                  title={scriptResult.title}
+                  synopsis={scriptResult.synopsis}
+                  script={scriptResult.script}
+                />
+                <div className="mt-8 flex justify-center">
+                  <Button onClick={resetForm} size="lg">
+                    Create Another Script
+                  </Button>
+                </div>
+              </>
+            </div>
           ) : (
             <>
               {loading && (
