@@ -12,33 +12,7 @@ import { PlusCircle, FileText, Clock, Calendar } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import Header from '@/components/Header'
 
-// Sample script projects data
-const scriptProjects = [
-  {
-    id: 1,
-    title: 'The Midnight Hour',
-    genre: 'Thriller',
-    description: 'A tense thriller about a night that changes everything.',
-    lastEdited: '2 days ago',
-    createdAt: 'June 15, 2023',
-  },
-  {
-    id: 2,
-    title: 'Echoes of Tomorrow',
-    genre: 'Science Fiction',
-    description: 'A journey through time and space that questions reality.',
-    lastEdited: '1 week ago',
-    createdAt: 'May 22, 2023',
-  },
-  {
-    id: 3,
-    title: 'The Last Sunset',
-    genre: 'Drama',
-    description: 'An emotional story about letting go and finding peace.',
-    lastEdited: '3 days ago',
-    createdAt: 'July 3, 2023',
-  },
-]
+import { scriptProjects } from '@/lib/projectData'
 
 const Dashboard = () => {
   return (
@@ -88,10 +62,12 @@ const Dashboard = () => {
                 </div>
               </CardContent>
               <CardFooter className="border-t flex justify-between pt-4">
-                <Button variant="ghost" size="sm" className="gap-1">
-                  <FileText className="h-4 w-4" />
-                  View
-                </Button>
+                <Link to={`/display?id=${project.id}`}>
+                  <Button variant="ghost" size="sm" className="gap-1">
+                    <FileText className="h-4 w-4" />
+                    View
+                  </Button>
+                </Link>
                 <Button variant="outline" size="sm">
                   Continue Writing
                 </Button>
@@ -100,17 +76,19 @@ const Dashboard = () => {
           ))}
 
           {/* Add New Project Card */}
-          <Card className="flex flex-col items-center justify-center h-full border-dashed border-2 hover:border-primary/50 hover:bg-primary/5 transition-colors cursor-pointer min-h-[320px]">
-            <CardContent className="flex flex-col items-center justify-center h-full py-8">
-              <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 text-primary">
-                <PlusCircle className="h-6 w-6" />
-              </div>
-              <h3 className="text-lg font-medium mb-2">Create New Script</h3>
-              <p className="text-sm text-center text-muted-foreground">
-                Start a fresh screenplay project with AI assistance
-              </p>
-            </CardContent>
-          </Card>
+          <Link to="/create">
+            <Card className="flex flex-col items-center justify-center h-full border-dashed border-2 hover:border-primary/50 hover:bg-primary/5 transition-colors cursor-pointer min-h-[320px]">
+              <CardContent className="flex flex-col items-center justify-center h-full py-8">
+                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 text-primary">
+                  <PlusCircle className="h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-medium mb-2">Create New Script</h3>
+                <p className="text-sm text-center text-muted-foreground">
+                  Start a fresh screenplay project with AI assistance
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
       </div>
     </div>
