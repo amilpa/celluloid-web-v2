@@ -164,9 +164,16 @@ export const generateScript = async (
       supporting_character_profiles += `${index + 1}. ${objectToString(char)}\n`
     })
 
+    const apiClient = axios.create({
+      baseURL: import.meta.env.VITE_SCRIPT_AGENT,
+      headers: {
+        'X-API-Key': import.meta.env.VITE_SECURE,
+      },
+    })
+
     // Simulate API call delay
     await new Promise((resolve) => setTimeout(resolve, 3000))
-    const response = await axios.post(
+    const response = await apiClient.post(
       `${import.meta.env.VITE_SCRIPT_AGENT}/script-agent/`,
       {
         title: params.title,

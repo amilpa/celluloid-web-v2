@@ -11,10 +11,12 @@ import DisplayScript from './pages/DisplayScript'
 import { useEffect } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth, provider } from '@/lib/firebaseConfig'
-import { signInWithPopup } from 'firebase/auth'
+import { signInWithPopup, signOut } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
 
 const queryClient = new QueryClient()
+
+const allowedEmails = ['amilpa2020@gmail.com']
 
 const ProtectedRoute = ({ children }) => {
   const [user, loading] = useAuthState(auth)
@@ -25,7 +27,12 @@ const ProtectedRoute = ({ children }) => {
       if (!loading && !user) {
         try {
           navigate('/')
-          await signInWithPopup(auth, provider)
+          const result = await signInWithPopup(auth, provider)
+          if (!allowedEmails.includes(result.user.email)) {
+            await signOut(auth)
+            alert('You are not allowed to access this page')
+            return
+          }
           navigate('/create')
         } catch (error) {
           console.error('Error during Google sign-in:', error)

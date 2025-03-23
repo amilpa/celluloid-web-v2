@@ -22,6 +22,13 @@ interface ProjectData {
   }
 }
 
+const apiClient = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  headers: {
+    'X-API-Key': import.meta.env.VITE_SECURE,
+  },
+})
+
 export default function ScriptGenerator() {
   const [currentStep, setCurrentStep] = useState(1)
   const [logline, setLogline] = useState('')
@@ -40,7 +47,7 @@ export default function ScriptGenerator() {
 
   const fetchLogline = async () => {
     try {
-      const response = await axios.post(`${apiUrl}/logline-agent`, {
+      const response = await apiClient.post(`${apiUrl}/logline-agent`, {
         abstract,
         genre,
       })
@@ -53,7 +60,7 @@ export default function ScriptGenerator() {
 
   const fetchCentralMessage = async () => {
     try {
-      const response = await axios.post(`${apiUrl}/central-message`, {
+      const response = await apiClient.post(`${apiUrl}/central-message`, {
         logline,
         story_elements: JSON.parse(localStorage.getItem(projectId) || '{}')
           .story_elements,
@@ -69,7 +76,7 @@ export default function ScriptGenerator() {
     AxiosResponse<CharacterDetails>
   > = async () => {
     try {
-      const response = await axios.post(`${apiUrl}/character-agent`, {
+      const response = await apiClient.post(`${apiUrl}/character-agent`, {
         abstract,
         logline,
         central_message: centralMessage,
