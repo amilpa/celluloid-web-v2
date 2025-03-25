@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom'
 
 const queryClient = new QueryClient()
 
-const allowedEmails = ['amilpa2020@gmail.com']
+const allowedEmails = ['amilpa2020@gmail.com', 'karthikgkumar.pro@gmail.com']
 
 const ProtectedRoute = ({ children }) => {
   const [user, loading] = useAuthState(auth)
