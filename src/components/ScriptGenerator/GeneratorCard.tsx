@@ -2,7 +2,11 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Loader2 } from 'lucide-react'
 import { generateScript } from '@/lib/api/script-service'
-import { TextareaField, SelectField } from '@/components/ui/form-elements'
+import {
+  TextareaField,
+  SelectField,
+  InputField,
+} from '@/components/ui/form-elements'
 import { toast } from '@/components/ui/use-toast'
 import ScriptDisplay from '@/components/ScriptDisplay'
 
@@ -135,9 +139,9 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
     setScriptResult(null)
 
     try {
-      // const characterDetailsResponse = await getCharacterDetails()
-      // const characterDetailsCurrent = characterDetailsResponse.data
-      // console.log('characterDetailsCurrent', characterDetailsCurrent)
+      const characterDetailsResponse = await getCharacterDetails()
+      const characterDetailsCurrent = characterDetailsResponse.data
+      console.log('characterDetailsCurrent', characterDetailsCurrent)
       const result = await generateScript({
         title: 'Untitled Script',
         genre,
@@ -145,11 +149,11 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
         centralMessage,
         abstract,
         characterDetails: {
-          // main_character_profiles: characterDetailsCurrent.main_characters,
-          main_character_profiles: [],
-          // supporting_character_profiles:
-          //   characterDetailsCurrent.supporting_characters,
-          supporting_character_profiles: [],
+          main_character_profiles: characterDetailsCurrent.main_characters,
+          // main_character_profiles: [],
+          supporting_character_profiles:
+            characterDetailsCurrent.supporting_characters,
+          // supporting_character_profiles: [],
         },
       })
 
@@ -284,6 +288,12 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {currentStep === 1 && (
                     <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
+                      <InputField
+                        label="Title"
+                        id="title"
+                        name="title"
+                        placeholder="Title of your story"
+                      />
                       <SelectField
                         label="Genre"
                         options={genres}
