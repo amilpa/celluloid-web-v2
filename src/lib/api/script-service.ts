@@ -4,7 +4,6 @@ import { current, current_s } from '@/lib/character-inputs/sample-3.js'
 
 import { db } from '@/lib/firebaseConfig'
 import { addDoc, collection } from 'firebase/firestore'
-import { title } from 'process'
 
 interface ScriptParams {
   title: string
@@ -112,7 +111,7 @@ export const generateScript = async (
 
     return {
       status: 'success',
-      title: title,
+      title: params.title,
       synopsis: params.abstract,
       script: finalScript,
     }
