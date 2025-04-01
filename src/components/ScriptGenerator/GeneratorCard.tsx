@@ -10,6 +10,8 @@ import {
 import { toast } from '@/components/ui/use-toast'
 import ScriptDisplay from '@/components/ScriptDisplay'
 
+import LoadingOverlay from '../LoadingOverlay'
+
 import { AxiosResponse } from 'axios'
 
 import './animation.css'
@@ -47,12 +49,14 @@ interface GeneratorCardProps {
   centralMessage: string
   genre: string
   characters: string
+  title: string
   setLogline: (value: string) => void
   setAbstract: (value: string) => void
   setCentralMessage: (value: string) => void
   setGenre: (value: string) => void
   setCharacters: (value: string) => void
   setCurrentStep: (value: number) => void
+  setTitle: (value: string) => void
   currentStep: number
   className: string
   loading: boolean
@@ -70,12 +74,14 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
   centralMessage,
   genre,
   characters,
+  title,
   setLogline,
   setAbstract,
   setCentralMessage,
   setGenre,
   setCurrentStep,
   setCharacters,
+  setTitle,
   currentStep,
   className,
   loading,
@@ -143,7 +149,7 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
       const characterDetailsCurrent = characterDetailsResponse.data
       console.log('characterDetailsCurrent', characterDetailsCurrent)
       const result = await generateScript({
-        title: 'Untitled Script',
+        title: title,
         genre,
         logline,
         centralMessage,
@@ -248,6 +254,7 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
       id="create"
       className={`${scriptResult ? 'pb-20' : 'pb-20 pt-4'} mt-8`}
     >
+      <LoadingOverlay isVisible={isGenerating} />
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
           <div className={`${scriptResult ? 'hidden' : ''}`}>
@@ -293,6 +300,8 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
                         id="title"
                         name="title"
                         placeholder="Title of your story"
+                        onChange={(e) => setTitle(e.target.value)}
+                        value={title}
                       />
                       <SelectField
                         label="Genre"

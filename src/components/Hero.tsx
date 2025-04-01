@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Button } from '@/components/ui/button'
+import { ArrowRight, Sparkles } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 export const Hero = () => {
   return (
@@ -33,9 +33,11 @@ export const Hero = () => {
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
-            <Button size="lg" variant="outline">
-              Explore Examples
-            </Button>
+            <Link to={'/examples'}>
+              <Button size="lg" variant="outline">
+                Explore Examples
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
@@ -56,7 +58,7 @@ export const Hero = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default Hero;
+export default Hero

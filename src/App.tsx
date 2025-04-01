@@ -13,6 +13,8 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth, provider } from '@/lib/firebaseConfig'
 import { signInWithPopup, signOut } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
+import Examples from './pages/Examples'
+import HowItWorks from './pages/HowItWorks'
 
 const queryClient = new QueryClient()
 
@@ -79,6 +81,8 @@ const App = () => (
               </ProtectedRoute>
             }
           />
+          <Route path="/examples" element={<Examples />} />
+          <Route path="/howitworks" element={<HowItWorks />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route
             path="*"

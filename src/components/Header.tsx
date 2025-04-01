@@ -59,18 +59,20 @@ export const Header = () => {
           </Link>
 
           <nav className="hidden md:flex items-center space-x-6">
-            <a
-              href="#features"
-              className="text-sm font-medium hover:text-primary transition-colors"
-            >
-              Features
-            </a>
-            <a
-              href="#how-it-works"
+            {location.pathname === '/' && (
+              <a
+                href="#features"
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
+                Features
+              </a>
+            )}
+            <Link
+              to="/howitworks"
               className="text-sm font-medium hover:text-primary transition-colors"
             >
               How it Works
-            </a>
+            </Link>
             <Link
               to="/create"
               className="text-sm font-medium hover:text-primary transition-colors"

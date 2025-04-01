@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Card,
   CardContent,
@@ -14,7 +14,28 @@ import Header from '@/components/Header'
 
 import { scriptProjects } from '@/lib/projectData'
 
+import { db } from '@/lib/firebaseConfig'
+import { collection, getDocs } from 'firebase/firestore'
+
 const Dashboard = () => {
+  const [scripts, setScripts] = React.useState([])
+  useEffect(() => {
+    // fetch all scripts
+    const fetchScripts = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'scripts'))
+        const scripts = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+        setScripts(scripts)
+      } catch (error) {
+        console.error('Error fetching scripts:', error)
+      }
+    }
+    fetchScripts()
+  }, [])
+
   return (
     <div className="min-h-screen bg-background pt-24 pb-16">
       <Header />
@@ -68,9 +89,53 @@ const Dashboard = () => {
                     View
                   </Button>
                 </Link>
-                <Button variant="outline" size="sm">
-                  Continue Writing
-                </Button>
+                <Link to={`/display?id=${project.id}`}>
+                  <Button variant="outline" size="sm">
+                    Continue Writing
+                  </Button>
+                </Link>
+              </CardFooter>
+            </Card>
+          ))}
+
+          {scripts.map((project) => (
+            <Card
+              key={project.id}
+              className="overflow-hidden hover:shadow-lg transition-shadow"
+            >
+              <CardHeader className="bg-primary/5 pb-4">
+                <CardTitle className="text-xl">{project.title}</CardTitle>
+                <CardDescription className="bg-primary/30 text-white w-fit px-2 py-0.5 rounded text-xs">
+                  {project.genre}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <p className="text-sm text-muted-foreground mb-4">
+                  {project.abstract}
+                </p>
+                <div className="flex flex-col space-y-2 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-3.5 w-3.5" />
+                    <span>Last edited just now</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-3.5 w-3.5" />
+                    <span>Created just now</span>
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter className="border-t flex justify-between pt-4">
+                <Link to={`/display?id=${project.id}&fetch=firebase`}>
+                  <Button variant="ghost" size="sm" className="gap-1">
+                    <FileText className="h-4 w-4" />
+                    View
+                  </Button>
+                </Link>
+                <Link to={`/display?id=${project.id}&fetch=firebase`}>
+                  <Button variant="outline" size="sm">
+                    Continue Writing
+                  </Button>
+                </Link>
               </CardFooter>
             </Card>
           ))}
