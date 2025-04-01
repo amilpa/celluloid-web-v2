@@ -324,6 +324,14 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
 
                   {currentStep === 2 && (
                     <div className="grid grid-cols-1 gap-6">
+                      <InputField
+                        label="Title"
+                        id="title"
+                        name="title"
+                        placeholder="Title of your story"
+                        onChange={(e) => setTitle(e.target.value)}
+                        value={title}
+                      />
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <SelectField
                           label="Genre"
@@ -359,6 +367,14 @@ export const GeneratorCard: React.FC<GeneratorCardProps> = ({
 
                   {currentStep === 3 && (
                     <div className="grid grid-cols-1 gap-6">
+                      <InputField
+                        label="Title"
+                        id="title"
+                        name="title"
+                        placeholder="Title of your story"
+                        onChange={(e) => setTitle(e.target.value)}
+                        value={title}
+                      />
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <SelectField
                           label="Genre"

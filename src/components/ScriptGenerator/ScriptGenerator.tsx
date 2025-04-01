@@ -3,6 +3,7 @@ import axios, { AxiosResponse } from 'axios'
 import GeneratorCard from './GeneratorCard'
 
 import './animation.css'
+import { title } from 'process'
 
 interface CharacterDetails {
   main_characters: []
@@ -42,6 +43,8 @@ export default function ScriptGenerator() {
   const [pendingStep, setPendingStep] = useState<number | null>(null)
   const [isFetchingComplete, setIsFetchingComplete] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+
+  const [title, setTitle] = useState('')
 
   const apiUrl = import.meta.env.VITE_API_URL
 
@@ -220,6 +223,7 @@ export default function ScriptGenerator() {
         loading={isLoading}
         onNext={handleNextStep}
         logline={logline}
+        title={title}
         abstract={abstract}
         centralMessage={centralMessage}
         genre={genre}
@@ -230,6 +234,7 @@ export default function ScriptGenerator() {
         setGenre={setGenre}
         setCharacters={setCharacters}
         setCurrentStep={setCurrentStep}
+        setTitle={setTitle}
         getCharacterDetails={fetchCharacters}
       />
     </div>

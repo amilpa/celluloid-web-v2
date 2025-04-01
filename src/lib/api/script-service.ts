@@ -113,7 +113,7 @@ export const generateScript = async (
     return {
       status: 'success',
       title: title,
-      synopsis: params.logline,
+      synopsis: params.abstract,
       script: finalScript,
     }
   } catch (error) {
