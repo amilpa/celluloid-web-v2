@@ -44,16 +44,38 @@ export const Hero = () => {
 
       <div className="max-w-6xl mx-auto mt-16 px-4 md:px-6 animate-blur-in">
         <div className="p-4 md:p-8 glass-card overflow-hidden">
-          <div className="h-[240px] md:h-[320px] bg-gray-900 rounded-lg flex items-center justify-center">
-            <div className="text-white text-center space-y-4">
-              <div className="animate-pulse-soft">
-                <Sparkles className="h-8 w-8 mx-auto text-primary mb-2" />
-                <p className="font-medium">CrewAI Agents Collaborating</p>
-              </div>
-              <p className="text-sm text-gray-400">
-                Visual representation of AI script creation
-              </p>
+          <div className="rounded-lg overflow-hidden aspect-video relative">
+            <div
+              style={{
+                left: 0,
+                width: '100%',
+                height: '100%',
+                position: 'absolute',
+              }}
+            >
+              <iframe
+                src="https://cdn.iframe.ly/api/iframe?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DrU5nwnDYaOM%26ab_channel%3DAmilPA&key=925108d922be940af814f71907a7df4b"
+                style={{
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  position: 'absolute',
+                  border: 0,
+                }}
+                allowFullScreen
+                scrolling="no"
+                allow="accelerometer *; clipboard-write *; encrypted-media *; gyroscope *; picture-in-picture *; web-share *;"
+                title="CrewAI Agents Collaborating"
+              ></iframe>
             </div>
+          </div>
+          <div className="mt-4 text-center">
+            <h3 className="text-lg font-medium">See CrewAI Agents in Action</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              Watch how our AI collaborators transform ideas into professional
+              scripts
+            </p>
           </div>
         </div>
       </div>
