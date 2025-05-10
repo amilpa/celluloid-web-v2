@@ -4,7 +4,7 @@ Welcome to the AI Movie Script Generator project! This application uses multiple
 
 ## Project Info
 
-**URL**: https://work.in.progess.com
+**URL**: https://celluloid.netlify.app/
 
 ## How Can I Edit This Code?
 
